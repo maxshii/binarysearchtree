@@ -5,7 +5,10 @@
  */
 
 #include <iostream>
-using namespace::std
+#include <cstring>
+#include <fstream>
+#include <cmath>
+using namespace::std;
 
 struct node
 {
@@ -16,35 +19,58 @@ struct node
 
 bool isNum(char input[]);
 int charToInt(char input[]);
-void print(node tree);
-void add();
+void print(node* root, int count);
+void add(node* &root, int value);
 void remove();
 bool search();
 
 int main()
 {
+  node* tree = NULL;
   while (true) {
+    cout << "INSERT, SEARCH, REMOVE, PRINT, QUIT\n";
 		char input[80];
 		cin.getline(input, 80, '\n');
 
-		if (isNum(input) == true) { //if input is a number
-			add(heap, count, charToInt(input));
-			count++;
-		} else { //try to find file name
-			fstream file;
-			file.open(input);
-			if (file.is_open()) {
-				int num;
-				while (file >> num) { //read in numbers from file
-					add(heap, count, num);
-					count++;
-				}
-			} else {
-				cout << "Error opening file.\n";
-			}
-		}
-	}
-  
+    if(strcmp(input, "INSERT") == 0)
+    {
+      cout << "Enter integer or file name: ";
+		  cin.getline(input, 80, '\n');
+
+      if (isNum(input) == true) { //if input is a number
+  			add(tree, charToInt(input));
+  		} 
+      else { //try to find file name
+  			fstream file;
+  			file.open(input);
+  			if (file.is_open()) {
+  				int num;
+  				while (file >> num) { //read in numbers from file
+  					add(tree, num);
+  				}
+  			} else {
+  				cout << "Error opening file.\n";
+  			}
+  		}
+    }
+    else if(strcmp(input, "SEARCH") == 0)
+    {
+      cout << "Enter value to search: ";
+    }
+    else if(strcmp(input, "REMOVE") == 0)
+    {
+      cout << "Enter value to remove: ";
+    }
+    else if(strcmp(input, "PRINT") == 0)
+    {
+      print(tree, 0);
+    }
+    else if(strcmp(input, "QUIT") == 0)
+    {
+      break;
+    }
+    
+    }
 }
 
 //checks if a char array contains only numbers. Source: heap project.
@@ -87,16 +113,36 @@ int charToInt(char input[]) {
 	return num;
 }
 
-void print(node root, int count)
+void print(node* root, int count)
 {
   if(root != NULL) 
   {
-    print(root.child2, count+1);
+    print(root->child2, count+1);
     for(int i = 0; i < count; i++)
       {
         cout << "    ";
       }
-    cout << root.data;
-    print(root.child1, count+1);
+    cout << root->data << endl;
+    print(root->child1, count+1);
+  }
+}
+
+void add(node* &root, int value)
+{
+  if(root == NULL)
+  {
+    node* n = new node();
+    n->data = value;
+    n->child1 = NULL;
+    n->child2 = NULL; 
+    root = n;
+  }
+  else if(value > root->data)
+  {
+    add(root->child2, value);
+  }
+  else
+  {
+    add(root->child1, value);
   }
 }

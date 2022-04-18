@@ -22,7 +22,7 @@ int charToInt(char input[]);
 void print(node* root, int count);
 void add(node* &root, int value);
 void remove();
-bool search();
+bool search(node* root, int value);
 
 int main()
 {
@@ -145,5 +145,25 @@ void add(node* &root, int value)
   else
   {
     add(root->child1, value);
+  }
+}
+
+bool search(node* root, int value)
+{
+  if(root == NULL)
+  {
+    return false;
+  }
+  else if(value == root->data)
+  {
+    return true;
+  }
+  else if(value > root->data)
+  {
+    search(root->child2, value);
+  }
+  else
+  {
+    search(root->child1, value);
   }
 }

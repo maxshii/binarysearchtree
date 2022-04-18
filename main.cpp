@@ -28,32 +28,11 @@ int main()
 {
   node* tree = NULL;
   while (true) {
-    cout << "INSERT, SEARCH, REMOVE, PRINT, QUIT\n";
+    cout << "Instructions:\nEnter a number or file name or SEARCH, REMOVE, PRINT, or QUIT\n";
 		char input[80];
 		cin.getline(input, 80, '\n');
 
-    if(strcmp(input, "INSERT") == 0)
-    {
-      cout << "Enter integer or file name: ";
-		  cin.getline(input, 80, '\n');
-
-      if (isNum(input) == true) { //if input is a number
-  			add(tree, charToInt(input));
-  		} 
-      else { //try to find file name
-  			fstream file;
-  			file.open(input);
-  			if (file.is_open()) {
-  				int num;
-  				while (file >> num) { //read in numbers from file
-  					add(tree, num);
-  				}
-  			} else {
-  				cout << "Error opening file.\n";
-  			}
-  		}
-    }
-    else if(strcmp(input, "SEARCH") == 0)
+    if(strcmp(input, "SEARCH") == 0)
     {
       cout << "Enter value to search: ";
     }
@@ -69,6 +48,28 @@ int main()
     {
       break;
     }
+    else
+    {
+      if (isNum(input) == true) { //if input is a number
+  			add(tree, charToInt(input));
+        cout << "Inserted " << input << ".\n\n";
+  		} 
+      else { //try to find file name
+  			fstream file;
+  			file.open(input);
+  			if (file.is_open()) {
+  				int num;
+  				while (file >> num) { //read in numbers from file
+  					add(tree, num);
+            cout << "Inserted " << num << ".\n\n";
+
+  				}
+  			} else {
+  				cout << "Error opening file.\n";
+  			}
+  		}
+    }
+    
     
     }
 }

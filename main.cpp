@@ -273,8 +273,8 @@ void remove(node* &root, node* n, node* parent, int value)
       }
       else //deleting root
       {
-          root = n->child2;        
-          delete n; 
+        root = n->child2;        
+        delete n; 
       }
     }
   }

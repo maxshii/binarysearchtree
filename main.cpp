@@ -21,7 +21,7 @@ bool isNum(char input[]);
 int charToInt(char input[]);
 void print(node* root, int count);
 void add(node* &root, int value);
-void remove(node* &root, node* parent, int value);
+void remove(node* &root, node* n, node* parent, int value);
 node* search(node* &root, int value);
 node* findSuccessorWithTwoChildren(node* &parent, node* child2);
 
@@ -55,7 +55,7 @@ int main()
       cin.getline(input, 80, '\n');
       if (isNum(input) == true) //if input is a number
       { 
-        remove(tree, tree, charToInt(input));
+        remove(tree, tree, tree, charToInt(input));
       }
     }
     else if(strcmp(input, "PRINT") == 0)
@@ -190,25 +190,25 @@ node* search(node* &root, int value)
 }
 
 //recursively searches tree and removes a node of the specified value
-void remove(node* &root, node* parent, int value)
+void remove(node* &root, node* n, node* parent, int value)
 {
-  if(root == NULL) //nothing in tree or reaches end
+  if(n == NULL) //nothing in tree or reaches end
   {
     return;
   }
-  else if(value == root->data) //finds a matching value
+  else if(value == n->data) //finds a matching value
   {
-    if(root->child1 == NULL && root->child2 == NULL) //node to delete is leaf
+    if(n->child1 == NULL && n->child2 == NULL) //node to delete is leaf
     {
-      if (parent != root) //if there is more than one node in the tree
+      if (parent != n) //if there is more than one node in the tree
       {
         
          //delete the node
-        delete root->child1;
-        delete root->child2;
-        delete root;
+        delete n->child1;
+        delete n->child2;
+        delete n;
         
-        if (parent->child1 == root) //find which child is correct
+        if (parent->child1 == n) //find which child is correct
         {
             parent->child1 = NULL;
         }
@@ -222,85 +222,69 @@ void remove(node* &root, node* parent, int value)
       else //if there is only one node in the tree
       {
         //delete the node
-        delete root->child1;
-        delete root->child2;
-        delete root;
+        delete n->child1;
+        delete n->child2;
+        delete n;
         root = NULL;
       }     
     }
-    else if(root->child1 != NULL && root->child2 != NULL) //node to delete has 2 children
+    else if(n->child1 != NULL && n->child2 != NULL) //node to delete has 2 children
     {
-      node* succParent = root;
-      node* succ = findSuccessorWithTwoChildren(succParent, root->child2); //finds successor and its parent
-      root->data = succ->data; //copies data from succesor to root
-      remove(succ, succParent, succ->data); //deletes successor
+      node* succParent = n;
+      node* succ = findSuccessorWithTwoChildren(succParent, n->child2); //finds successor and its parent
+      n->data = succ->data; //copies data from succesor to n
+      remove(root, succ, succParent, succ->data); //deletes successor
     }
-    else if(root->child1 != NULL) //node to delete has only child 1
+    else if(n->child1 != NULL) //node to delete has only child 1
     {
-      if(parent != root) //if not at top of tree
+      if(root != n) //if n not at top of tree
       {
-       if (parent->child1 == root) //find which child is correct
+       if (parent->child1 == n) //find which parent child points to n 
         {
-          parent->child1 = root->child1; //parent is linked to root's child
-          delete root; 
+          parent->child1 = n->child1; //parent is linked to n's child
+          delete n; 
         }
         else 
         {
-          parent->child2 = root->child1;        
-          delete root;  
+          parent->child2 = n->child1;        
+          delete n;  
         }
       }
       else
       {
-        if (parent->child1 == root) //find which child is correct
-        {
-          root = root->child1; //root becomes child
-          delete parent; //delete old root
-        }
-        else 
-        {
-          root = root->child1;        
-          delete parent;  
-        }
+        root = n->child1;        
+        delete n; 
       }
     }
-    else if(root->child2 != NULL) //node to delete has only child 2
+    else if(n->child2 != NULL) //node to delete has only child 2
     {
-      if(parent != root) //if not at top of tree
+      if(root != n) //if n not at top of tree
       {
-        if (parent->child1 == root) //find which child is correct
+        if (parent->child1 == n) //find which parent child points to n 
         {
-          parent->child1 = root->child2;
-          delete root;  
+          parent->child1 = n->child2;
+          delete n;  
         }
         else 
         {
-          parent->child2 = root->child2;        
-          delete root;  
+          parent->child2 = n->child2;   
+          delete n;  
         }
       }
-      else
+      else //deleting root
       {
-        if (parent->child1 == root) //find which child is correct
-        {
-          root = root->child1;
-          delete parent;  
-        }
-        else 
-        {
-          root = root->child1;        
-          delete parent;  
-        }
+          root = n->child2;        
+          delete n; 
       }
     }
   }
-  else if(value > root->data) //goes down right subtree
+  else if(value > n->data) //goes down right subtree
   {
-    remove(root->child2, root, value);
+    remove(root, n->child2, n, value);
   }
   else //goes down left subtree
   {
-    remove(root->child1, root, value);
+    remove(root, n->child1, n, value);
   }
   
 }

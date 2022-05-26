@@ -1,0 +1,9 @@
+deletion with 2 children
+  inorder succesor of node to delete can have right child but not left child
+  if successor is direct child of node to delete
+    can replace
+  if not direct child
+    must connect inorder succ parent left pointer to inorder succ right child
+
+finding inorder succesor
+  can be recursive or iterative
